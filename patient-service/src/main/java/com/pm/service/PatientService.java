@@ -42,14 +42,15 @@ public class PatientService {
           throw new EmailAlreadyExistsException("A patient with ths email"+ "already exists"+ patientRequestDTO.getEmail());
       }
 
-       Patient newPatient= patientRepository.save(PatientMapper.toModel(patientRequestDTO));
-          producer.sendEvent(newPatient);
+       Patient newPatient = patientRepository.save(PatientMapper.toModel(patientRequestDTO));
+       producer.sendEvent(newPatient);
        BillingRequest billingRequest=new BillingRequest();
        billingRequest.setId(newPatient.getId());
        billingRequest.setName(newPatient.getName());
        billingRequest.setEmail(newPatient.getEmail());
 
-       BillingResponse billingResponse=billingClient.createBilling(billingRequest);
+       BillingResponse billingResponse = billingClient.createBilling(billingRequest);
+
 
    PatientResponseDTO response =PatientMapper.toDTO(newPatient);
    response.setBillingAccountId(billingResponse.getAccountId());
